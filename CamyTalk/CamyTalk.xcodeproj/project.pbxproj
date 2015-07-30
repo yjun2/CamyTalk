@@ -1,0 +1,501 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2E31A8ED1B69E30200174056 /* green-circle-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E31A8EB1B69E30200174056 /* green-circle-16.png */; };
+		2E31A8EE1B69E30200174056 /* red-circle-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E31A8EC1B69E30200174056 /* red-circle-16.png */; };
+		2EA74E9E1B68833400837331 /* Peer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA74E9D1B68833400837331 /* Peer.swift */; };
+		2EFE16331B66DF5D00C8606C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFE16321B66DF5D00C8606C /* AppDelegate.swift */; };
+		2EFE16361B66DF5D00C8606C /* CamyTalk.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2EFE16341B66DF5D00C8606C /* CamyTalk.xcdatamodeld */; };
+		2EFE163B1B66DF5D00C8606C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EFE16391B66DF5D00C8606C /* Main.storyboard */; };
+		2EFE163D1B66DF5D00C8606C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2EFE163C1B66DF5D00C8606C /* Images.xcassets */; };
+		2EFE16401B66DF5D00C8606C /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EFE163E1B66DF5D00C8606C /* LaunchScreen.xib */; };
+		2EFE164C1B66DF5D00C8606C /* CamyTalkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFE164B1B66DF5D00C8606C /* CamyTalkTests.swift */; };
+		2EFE16561B66DFED00C8606C /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFE16551B66DFED00C8606C /* CoreDataStack.swift */; };
+		2EFE16581B66E15E00C8606C /* PeerListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFE16571B66E15E00C8606C /* PeerListViewController.swift */; };
+		2EFE165A1B66E36500C8606C /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFE16591B66E36500C8606C /* SettingsViewController.swift */; };
+		2EFE16601B672C1000C8606C /* MCFManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFE165F1B672C1000C8606C /* MCFManager.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2EFE16461B66DF5D00C8606C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2EFE16251B66DF5D00C8606C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2EFE162C1B66DF5D00C8606C;
+			remoteInfo = CamyTalk;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		2E31A8EB1B69E30200174056 /* green-circle-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "green-circle-16.png"; sourceTree = "<group>"; };
+		2E31A8EC1B69E30200174056 /* red-circle-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-circle-16.png"; sourceTree = "<group>"; };
+		2EA74E9D1B68833400837331 /* Peer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Peer.swift; sourceTree = "<group>"; };
+		2EFE162D1B66DF5D00C8606C /* CamyTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CamyTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EFE16311B66DF5D00C8606C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2EFE16321B66DF5D00C8606C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2EFE16351B66DF5D00C8606C /* CamyTalk.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CamyTalk.xcdatamodel; sourceTree = "<group>"; };
+		2EFE163A1B66DF5D00C8606C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		2EFE163C1B66DF5D00C8606C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		2EFE163F1B66DF5D00C8606C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		2EFE16451B66DF5D00C8606C /* CamyTalkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CamyTalkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EFE164A1B66DF5D00C8606C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2EFE164B1B66DF5D00C8606C /* CamyTalkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CamyTalkTests.swift; sourceTree = "<group>"; };
+		2EFE16551B66DFED00C8606C /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		2EFE16571B66E15E00C8606C /* PeerListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeerListViewController.swift; sourceTree = "<group>"; };
+		2EFE16591B66E36500C8606C /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		2EFE165F1B672C1000C8606C /* MCFManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MCFManager.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2EFE162A1B66DF5D00C8606C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EFE16421B66DF5D00C8606C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2E31A8EF1B69E3DA00174056 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				2EFE16571B66E15E00C8606C /* PeerListViewController.swift */,
+				2EFE16591B66E36500C8606C /* SettingsViewController.swift */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		2E31A8F01B69E3EA00174056 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				2EA74E9D1B68833400837331 /* Peer.swift */,
+				2EFE16551B66DFED00C8606C /* CoreDataStack.swift */,
+			);
+			name = CoreData;
+			sourceTree = "<group>";
+		};
+		2E31A8F11B69E40600174056 /* MultiPeer */ = {
+			isa = PBXGroup;
+			children = (
+				2EFE165F1B672C1000C8606C /* MCFManager.swift */,
+			);
+			name = MultiPeer;
+			sourceTree = "<group>";
+		};
+		2EA74E9F1B6898B300837331 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				2E31A8EB1B69E30200174056 /* green-circle-16.png */,
+				2E31A8EC1B69E30200174056 /* red-circle-16.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
+		2EFE16241B66DF5D00C8606C = {
+			isa = PBXGroup;
+			children = (
+				2EFE162F1B66DF5D00C8606C /* CamyTalk */,
+				2EFE16481B66DF5D00C8606C /* CamyTalkTests */,
+				2EFE162E1B66DF5D00C8606C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2EFE162E1B66DF5D00C8606C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2EFE162D1B66DF5D00C8606C /* CamyTalk.app */,
+				2EFE16451B66DF5D00C8606C /* CamyTalkTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2EFE162F1B66DF5D00C8606C /* CamyTalk */ = {
+			isa = PBXGroup;
+			children = (
+				2E31A8F11B69E40600174056 /* MultiPeer */,
+				2E31A8F01B69E3EA00174056 /* CoreData */,
+				2E31A8EF1B69E3DA00174056 /* Controllers */,
+				2EA74E9F1B6898B300837331 /* Images */,
+				2EFE16321B66DF5D00C8606C /* AppDelegate.swift */,
+				2EFE16391B66DF5D00C8606C /* Main.storyboard */,
+				2EFE163C1B66DF5D00C8606C /* Images.xcassets */,
+				2EFE163E1B66DF5D00C8606C /* LaunchScreen.xib */,
+				2EFE16341B66DF5D00C8606C /* CamyTalk.xcdatamodeld */,
+				2EFE16301B66DF5D00C8606C /* Supporting Files */,
+			);
+			path = CamyTalk;
+			sourceTree = "<group>";
+		};
+		2EFE16301B66DF5D00C8606C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2EFE16311B66DF5D00C8606C /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2EFE16481B66DF5D00C8606C /* CamyTalkTests */ = {
+			isa = PBXGroup;
+			children = (
+				2EFE164B1B66DF5D00C8606C /* CamyTalkTests.swift */,
+				2EFE16491B66DF5D00C8606C /* Supporting Files */,
+			);
+			path = CamyTalkTests;
+			sourceTree = "<group>";
+		};
+		2EFE16491B66DF5D00C8606C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2EFE164A1B66DF5D00C8606C /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2EFE162C1B66DF5D00C8606C /* CamyTalk */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2EFE164F1B66DF5D00C8606C /* Build configuration list for PBXNativeTarget "CamyTalk" */;
+			buildPhases = (
+				2EFE16291B66DF5D00C8606C /* Sources */,
+				2EFE162A1B66DF5D00C8606C /* Frameworks */,
+				2EFE162B1B66DF5D00C8606C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CamyTalk;
+			productName = CamyTalk;
+			productReference = 2EFE162D1B66DF5D00C8606C /* CamyTalk.app */;
+			productType = "com.apple.product-type.application";
+		};
+		2EFE16441B66DF5D00C8606C /* CamyTalkTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2EFE16521B66DF5D00C8606C /* Build configuration list for PBXNativeTarget "CamyTalkTests" */;
+			buildPhases = (
+				2EFE16411B66DF5D00C8606C /* Sources */,
+				2EFE16421B66DF5D00C8606C /* Frameworks */,
+				2EFE16431B66DF5D00C8606C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2EFE16471B66DF5D00C8606C /* PBXTargetDependency */,
+			);
+			name = CamyTalkTests;
+			productName = CamyTalkTests;
+			productReference = 2EFE16451B66DF5D00C8606C /* CamyTalkTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2EFE16251B66DF5D00C8606C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0640;
+				ORGANIZATIONNAME = "Yong Jun";
+				TargetAttributes = {
+					2EFE162C1B66DF5D00C8606C = {
+						CreatedOnToolsVersion = 6.4;
+					};
+					2EFE16441B66DF5D00C8606C = {
+						CreatedOnToolsVersion = 6.4;
+						TestTargetID = 2EFE162C1B66DF5D00C8606C;
+					};
+				};
+			};
+			buildConfigurationList = 2EFE16281B66DF5D00C8606C /* Build configuration list for PBXProject "CamyTalk" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2EFE16241B66DF5D00C8606C;
+			productRefGroup = 2EFE162E1B66DF5D00C8606C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2EFE162C1B66DF5D00C8606C /* CamyTalk */,
+				2EFE16441B66DF5D00C8606C /* CamyTalkTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2EFE162B1B66DF5D00C8606C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2E31A8ED1B69E30200174056 /* green-circle-16.png in Resources */,
+				2EFE163B1B66DF5D00C8606C /* Main.storyboard in Resources */,
+				2E31A8EE1B69E30200174056 /* red-circle-16.png in Resources */,
+				2EFE16401B66DF5D00C8606C /* LaunchScreen.xib in Resources */,
+				2EFE163D1B66DF5D00C8606C /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EFE16431B66DF5D00C8606C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2EFE16291B66DF5D00C8606C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2EFE16581B66E15E00C8606C /* PeerListViewController.swift in Sources */,
+				2EFE16331B66DF5D00C8606C /* AppDelegate.swift in Sources */,
+				2EFE16361B66DF5D00C8606C /* CamyTalk.xcdatamodeld in Sources */,
+				2EFE165A1B66E36500C8606C /* SettingsViewController.swift in Sources */,
+				2EFE16601B672C1000C8606C /* MCFManager.swift in Sources */,
+				2EFE16561B66DFED00C8606C /* CoreDataStack.swift in Sources */,
+				2EA74E9E1B68833400837331 /* Peer.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2EFE16411B66DF5D00C8606C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2EFE164C1B66DF5D00C8606C /* CamyTalkTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2EFE16471B66DF5D00C8606C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2EFE162C1B66DF5D00C8606C /* CamyTalk */;
+			targetProxy = 2EFE16461B66DF5D00C8606C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		2EFE16391B66DF5D00C8606C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2EFE163A1B66DF5D00C8606C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		2EFE163E1B66DF5D00C8606C /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2EFE163F1B66DF5D00C8606C /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2EFE164D1B66DF5D00C8606C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2EFE164E1B66DF5D00C8606C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2EFE16501B66DF5D00C8606C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = CamyTalk/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2EFE16511B66DF5D00C8606C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = CamyTalk/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		2EFE16531B66DF5D00C8606C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = CamyTalkTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CamyTalk.app/CamyTalk";
+			};
+			name = Debug;
+		};
+		2EFE16541B66DF5D00C8606C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = CamyTalkTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CamyTalk.app/CamyTalk";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2EFE16281B66DF5D00C8606C /* Build configuration list for PBXProject "CamyTalk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2EFE164D1B66DF5D00C8606C /* Debug */,
+				2EFE164E1B66DF5D00C8606C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2EFE164F1B66DF5D00C8606C /* Build configuration list for PBXNativeTarget "CamyTalk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2EFE16501B66DF5D00C8606C /* Debug */,
+				2EFE16511B66DF5D00C8606C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2EFE16521B66DF5D00C8606C /* Build configuration list for PBXNativeTarget "CamyTalkTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2EFE16531B66DF5D00C8606C /* Debug */,
+				2EFE16541B66DF5D00C8606C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		2EFE16341B66DF5D00C8606C /* CamyTalk.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				2EFE16351B66DF5D00C8606C /* CamyTalk.xcdatamodel */,
+			);
+			currentVersion = 2EFE16351B66DF5D00C8606C /* CamyTalk.xcdatamodel */;
+			path = CamyTalk.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 2EFE16251B66DF5D00C8606C /* Project object */;
+}
