@@ -10,7 +10,7 @@ import UIKit
 import MultipeerConnectivity
 import CoreData
 
-class PeerListViewController: UITableViewController, MCFManagerDelegate {
+class PeerListViewController: UITableViewController, MCFManagerDelegate{
     
     var mpcManager: MCFManager?
     var coreDataHelper: CoreDataHelper?
@@ -25,9 +25,14 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate {
             peers = results
         }
         
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "fetchAllAgain",
+            name: UIApplicationWillEnterForegroundNotification,
+            object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         
         mpcManager?.delegate = self
         
@@ -36,6 +41,10 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate {
     }
     
     override func viewWillDisappear(animated: Bool) {
+        
+        NSNotificationCenter.defaultCenter().removeObserver(self,
+            name: UIApplicationWillEnterForegroundNotification,
+            object: nil)
         
         // this is just to simulate a peer is lost.
         // you would not want to stop the services because the view is disappered
@@ -72,13 +81,17 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate {
     
     // MARK: MCFManagerDelegate
     func mpcManagerAvailablePeers() {
+        fetchAllAgain()
+    }
+   
+    func fetchAllAgain() {
+        println("fetch all again")
         if let results = coreDataHelper?.fetchAll() {
             peers = results
             tableView.reloadData()
         }
-
     }
-   
+    
     
     /*
     // MARK: - Navigation
