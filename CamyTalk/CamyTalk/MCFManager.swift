@@ -17,8 +17,7 @@ protocol MCFManagerDelegate: class {
 class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNearbyServiceAdvertiserDelegate {
     let SERVIVCE_TYPE = "camytalk"
     
-    var managedContext: NSManagedObjectContext?
-    
+    var coreDataHelper: CoreDataHelper?
     var session: MCSession?
     var browser: MCNearbyServiceBrowser?
     var advertiser: MCNearbyServiceAdvertiser?
@@ -72,11 +71,11 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     func session(session: MCSession!, peer peerID: MCPeerID!, didChangeState state: MCSessionState) {
         switch state {
             case .Connected:
-                println("connected to \(peerID.displayName)")
+                println("Connected to \(peerID.displayName)")
             case .Connecting:
                 println("Connecting to \(peerID.displayName)")
             default:
-                println("Did not connect to session: \(session)")
+                println("Connection disconnected: \(peerID.displayName)")
         }
     }
     
@@ -95,20 +94,20 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         println("found peer id: \(peerID.displayName)")
         
         // fetch core data to see if the peer is already saved
-        if let count = fetchPeerCount(peerID) {
+        if let count = coreDataHelper?.fetchPeerCount(peerID) {
             if count == 0 { // not saved in core data yet
                 println("adding new peer '\(peerID.displayName)' to core data")
-                savePeer(peerID)
+                coreDataHelper?.savePeer(peerID)
             } else {
                 println("\(peerID.displayName) already exist in core data")
                 
                 // change the online status to true
-                changeOnlineStatus(peerID, status: true)
+                coreDataHelper?.changeOnlineStatus(peerID.displayName, status: true)
             }
         }
         
         // invite peer
-        browser.invitePeer(peerID, toSession: session, withContext: nil, timeout: 10)
+        browser.invitePeer(peerID, toSession: session, withContext: nil, timeout: 3)
         
         delegate?.mpcManagerAvailablePeers()
     }
@@ -116,7 +115,12 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     func browser(browser: MCNearbyServiceBrowser!, lostPeer peerID: MCPeerID!) {
         println("lost peer id: \(peerID.displayName)")
         
-        changeOnlineStatus(peerID, status: false)
+        coreDataHelper?.changeOnlineStatus(peerID.displayName, status: false)
+        
+        // end session
+        println("disconnecting session")
+        session?.disconnect()
+        
         delegate?.mpcManagerAvailablePeers()
     }
     
@@ -136,64 +140,7 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     }
     
     // MARK: Core Data
-    func savePeer(newPeer: MCPeerID) {
-        let peerEntity = NSEntityDescription.entityForName("Peer", inManagedObjectContext: managedContext!)
-        let peer = Peer(entity: peerEntity!, insertIntoManagedObjectContext: managedContext)
-        peer.displayName = newPeer.displayName
-        peer.isBlocked = false
-        peer.dateLastConnected = NSDate()
-        peer.isOnline = true
-        
-        var error: NSError?
-        if !managedContext!.save(&error) {
-            println("Could not save: \(error)")
-        } else {
-            println("A peer \(newPeer.displayName) saved")
-        }
-    }
-    
-    func fetchPeerCount(peer: MCPeerID) -> Int? {
-        
-        let peerPredicate = NSPredicate(format: "displayName == %@", peer.displayName)
-        
-        let fetchRequest = NSFetchRequest(entityName: "Peer")
-        fetchRequest.predicate = peerPredicate
-        
-        var error: NSError?
-        let count = managedContext?.countForFetchRequest(fetchRequest, error: &error)
-        
-        if count == NSNotFound {
-            println("Could not fetch \(error)")
-        }
-        
-        return count
-    }
-    
-    func changeOnlineStatus(peer: MCPeerID, status: Bool) {
-        let peerPredicate = NSPredicate(format: "displayName == %@", peer.displayName)
-        
-        let fetchRequest = NSFetchRequest(entityName: "Peer")
-        fetchRequest.predicate = peerPredicate
-        
-        var error: NSError?
-        let fetchResults = managedContext?.executeFetchRequest(fetchRequest, error: &error) as? [Peer]
-        
-        if let results = fetchResults {
-            // there is always only one unique peer
-            results[0].isOnline = status
-            
-            var error: NSError?
-            if !managedContext!.save(&error) {
-                println("Could not save: \(error)")
-            } else {
-                println("Peer online status changed to \(status)")
-            }
-            
-        } else {
-            println("Could not fetch \(error)")
-        }
 
-    }
-
+    
 }
 

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2E31A8ED1B69E30200174056 /* green-circle-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E31A8EB1B69E30200174056 /* green-circle-16.png */; };
 		2E31A8EE1B69E30200174056 /* red-circle-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E31A8EC1B69E30200174056 /* red-circle-16.png */; };
+		2E31A8F31B69F10400174056 /* CoreDataHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E31A8F21B69F10400174056 /* CoreDataHelper.swift */; };
 		2EA74E9E1B68833400837331 /* Peer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA74E9D1B68833400837331 /* Peer.swift */; };
 		2EFE16331B66DF5D00C8606C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFE16321B66DF5D00C8606C /* AppDelegate.swift */; };
 		2EFE16361B66DF5D00C8606C /* CamyTalk.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2EFE16341B66DF5D00C8606C /* CamyTalk.xcdatamodeld */; };
@@ -35,6 +36,7 @@
 /* Begin PBXFileReference section */
 		2E31A8EB1B69E30200174056 /* green-circle-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "green-circle-16.png"; sourceTree = "<group>"; };
 		2E31A8EC1B69E30200174056 /* red-circle-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red-circle-16.png"; sourceTree = "<group>"; };
+		2E31A8F21B69F10400174056 /* CoreDataHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataHelper.swift; sourceTree = "<group>"; };
 		2EA74E9D1B68833400837331 /* Peer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Peer.swift; sourceTree = "<group>"; };
 		2EFE162D1B66DF5D00C8606C /* CamyTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CamyTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EFE16311B66DF5D00C8606C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 			children = (
 				2EA74E9D1B68833400837331 /* Peer.swift */,
 				2EFE16551B66DFED00C8606C /* CoreDataStack.swift */,
+				2E31A8F21B69F10400174056 /* CoreDataHelper.swift */,
 			);
 			name = CoreData;
 			sourceTree = "<group>";
@@ -269,6 +272,7 @@
 			files = (
 				2EFE16581B66E15E00C8606C /* PeerListViewController.swift in Sources */,
 				2EFE16331B66DF5D00C8606C /* AppDelegate.swift in Sources */,
+				2E31A8F31B69F10400174056 /* CoreDataHelper.swift in Sources */,
 				2EFE16361B66DF5D00C8606C /* CamyTalk.xcdatamodeld in Sources */,
 				2EFE165A1B66E36500C8606C /* SettingsViewController.swift in Sources */,
 				2EFE16601B672C1000C8606C /* MCFManager.swift in Sources */,

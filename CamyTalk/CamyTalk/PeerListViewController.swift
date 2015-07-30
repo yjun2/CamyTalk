@@ -13,13 +13,18 @@ import CoreData
 class PeerListViewController: UITableViewController, MCFManagerDelegate {
     
     var mpcManager: MCFManager?
-    var managedContext: NSManagedObjectContext?
+    var coreDataHelper: CoreDataHelper?
     
     var peers = [Peer]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Avaiilable Peers"
+        
+        if let results = coreDataHelper?.fetchAll() {
+            peers = results
+        }
+        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -28,9 +33,6 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate {
         
         // start the multipeer connectivity browser and advertiser
         mpcManager?.startServices()
-        
-        fetchAll()
-
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -70,24 +72,13 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate {
     
     // MARK: MCFManagerDelegate
     func mpcManagerAvailablePeers() {
-        fetchAll()
-        tableView.reloadData()
-    }
-        
-    // MARK: Core Data
-    func fetchAll() {
-        let fetchRequest = NSFetchRequest(entityName: "Peer")
-        
-        var error: NSError?
-        let fetchResults = managedContext?.executeFetchRequest(fetchRequest, error: &error) as? [Peer]
-        
-        if let results = fetchResults {
+        if let results = coreDataHelper?.fetchAll() {
             peers = results
-        } else {
-            println("Could not fetch \(error)")
+            tableView.reloadData()
         }
-        
+
     }
+   
     
     /*
     // MARK: - Navigation
