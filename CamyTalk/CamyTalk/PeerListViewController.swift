@@ -14,12 +14,13 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate{
     
     var mpcManager: MCFManager?
     var coreDataHelper: CoreDataHelper?
+    var connectedPeer: MCPeerID?
     
     var peers = [Peer]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Avaiilable Peers"
+        navigationItem.title = "Avaiilable Peers"
         
         if let results = coreDataHelper?.fetchAll() {
             peers = results
@@ -36,8 +37,6 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate{
         
         mpcManager?.delegate = self
         
-        // start the multipeer connectivity browser and advertiser
-        mpcManager?.startServices()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -45,10 +44,6 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate{
         NSNotificationCenter.defaultCenter().removeObserver(self,
             name: UIApplicationWillEnterForegroundNotification,
             object: nil)
-        
-        // this is just to simulate a peer is lost.
-        // you would not want to stop the services because the view is disappered
-        mpcManager?.stopServices()
     }
     
     override func didReceiveMemoryWarning() {
@@ -65,7 +60,6 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate{
         
         let indicator = cell.viewWithTag(1001) as? UIImageView
         let status = peers[indexPath.row].isOnline
-        println("peer status: \(status)")
         
         if status == false {
             indicator?.image = UIImage(named: "red-circle-16.png")
@@ -84,23 +78,37 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate{
         fetchAllAgain()
     }
    
+    func mpcManagerConnectedPeer(connectedPeerId: MCPeerID) {
+        self.connectedPeer = connectedPeerId
+    }
+    
     func fetchAllAgain() {
-        println("fetch all again")
         if let results = coreDataHelper?.fetchAll() {
             peers = results
             tableView.reloadData()
         }
     }
     
-    
-    /*
     // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    // Get the new view controller using segue.destinationViewController.
-    // Pass the selected object to the new view controller.
+        if segue.identifier == "Chatting" {
+            let chattingVC = segue.destinationViewController as! ChattingViewController
+            chattingVC.hidesBottomBarWhenPushed = true
+            
+            if let indexPath = tableView.indexPathForCell(sender as! UITableViewCell) {
+                chattingVC.mpcManager = self.mpcManager
+                chattingVC.userName = peers[indexPath.row].displayName
+                chattingVC.connectedPeer = self.connectedPeer
+                
+                // fetch or create a conversation object from core data and 
+                // send it over to ChattingViewController
+                // TBD
+            }
+            
+        }
+
     }
-    */
+
 
 }

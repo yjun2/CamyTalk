@@ -33,8 +33,6 @@ class CoreDataHelper {
             var error: NSError?
             if !managedContext!.save(&error) {
                 println("Could not save: \(error)")
-            } else {
-                println("Peer online status changed to \(status)")
             }
             
         } else {

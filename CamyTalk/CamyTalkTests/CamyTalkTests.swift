@@ -11,9 +11,10 @@ import XCTest
 
 class CamyTalkTests: XCTestCase {
     
+//    let mpcManager = MCFManager()
+    
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
     }
     
     override func tearDown() {
@@ -21,16 +22,23 @@ class CamyTalkTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
+    func testSendData() {
+//        let message = "hello from iOS simulator"
+//        
+//        sleep(15 * 1000)
+//        println("slept for 15 seconds")
+//        
+//        if let peers = mpcManager.session?.connectedPeers {
+//            println("i have connected peers: \(peers.count)")
+//            println("my peer id \(mpcManager.myPeerId.displayName)")
+//        } else {
+//            println("no connected peers")
+//        }
+//        
+//        let toPeer = mpcManager.session?.connectedPeers[0] as! MCPeerID
+//        mpcManager.sendMessage(message, toPeer: toPeer)
+        
     }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measureBlock() {
-            // Put the code you want to measure the time of here.
-        }
-    }
+
     
 }

@@ -12,6 +12,7 @@ import CoreData
 
 protocol MCFManagerDelegate: class {
     func mpcManagerAvailablePeers()
+    func mpcManagerConnectedPeer(connectedPeerId: MCPeerID)
 }
 
 class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNearbyServiceAdvertiserDelegate {
@@ -72,15 +73,23 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         switch state {
             case .Connected:
                 println("Connected to \(peerID.displayName)")
+                delegate?.mpcManagerConnectedPeer(peerID)
             case .Connecting:
                 println("Connecting to \(peerID.displayName)")
-            default:
-                println("Connection disconnected: \(peerID.displayName)")
+            case .NotConnected:
+                println("Not connected: \(peerID.displayName)")
+                coreDataHelper?.changeAllPeersToOffline()
+                delegate?.mpcManagerAvailablePeers()
         }
     }
     
     func session(session: MCSession!, didReceiveData data: NSData!, fromPeer peerID: MCPeerID!) {
         
+        let message = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
+        println("Received message from peer: \(peerID.displayName), message: \(message)")
+        
+        let messageDict: [String: String] = ["from": peerID.displayName, "message": message]
+        NSNotificationCenter.defaultCenter().postNotificationName("receivedMessageDataNotification", object: messageDict)
     }
     
     func session(session: MCSession!, didStartReceivingResourceWithName resourceName: String!, fromPeer peerID: MCPeerID!, withProgress progress: NSProgress!) {}
@@ -107,14 +116,14 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         }
         
         // invite peer
-        browser.invitePeer(peerID, toSession: session, withContext: nil, timeout: 3)
+        browser.invitePeer(peerID, toSession: session, withContext: nil, timeout: 10)
         
         delegate?.mpcManagerAvailablePeers()
     }
     
     func browser(browser: MCNearbyServiceBrowser!, lostPeer peerID: MCPeerID!) {
-        println("lost peer id: \(peerID.displayName)")
         
+        println("lost peer id: \(peerID.displayName)")
         coreDataHelper?.changeOnlineStatus(peerID.displayName, status: false)
         
         // end session
@@ -139,7 +148,22 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         println("Advertiser did not start: \(error)")
     }
     
-    // MARK: Core Data
+    // MARK: MCFManager methods
+    func sendMessage(message: String, toPeer: MCPeerID, sentDate: NSDate) -> Bool {
+        let data = (message as NSString).dataUsingEncoding(NSUTF8StringEncoding)
+        let toPeersArray = [toPeer]
+        var error: NSError?
+        
+        println("sent message: \(message); to: \(toPeer.displayName)")
+        if let dataString = data {
+            if session?.sendData(dataString, toPeers: toPeersArray, withMode: MCSessionSendDataMode.Unreliable, error: &error) == nil {
+                println(error?.description)
+                return false
+            }
+        }
+        
+        return true
+    }
 
     
 }

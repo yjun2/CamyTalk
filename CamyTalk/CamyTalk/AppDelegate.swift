@@ -20,9 +20,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
         // initialize CoreDataHelper
         mpcManager.coreDataHelper = coreDataHelper
+        
+        // start the multipeer connectivity browser and advertiser
+        mpcManager.startServices()
         
         let tabBarController = self.window!.rootViewController as! UITabBarController
         let navController = tabBarController.childViewControllers[0] as! UINavigationController
@@ -37,10 +39,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
-        coreDataStack.saveContext()
-        
         // change all peers to offline
         coreDataHelper.changeAllPeersToOffline()
+        
+        coreDataStack.saveContext()
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
@@ -48,8 +50,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
     }
-
+    
     func applicationWillTerminate(application: UIApplication) {
+        
+        // change all peers to offline
+        coreDataHelper.changeAllPeersToOffline()
+        
         coreDataStack.saveContext()
     }
 

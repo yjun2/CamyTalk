@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="7701" systemVersion="14E46" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Conversation" representedClassName="CamyTalk.Conversation" syncable="YES">
+        <attribute name="fromPeer" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="toPeer" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Message" inverseName="conversation" inverseEntity="Message" syncable="YES"/>
+        <relationship name="peer" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Peer" inverseName="conversation" inverseEntity="Peer" syncable="YES"/>
+    </entity>
+    <entity name="Message" representedClassName="CamyTalk.Message" syncable="YES">
+        <attribute name="dateSent" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="msg" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="conversation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="messages" inverseEntity="Conversation" syncable="YES"/>
+    </entity>
     <entity name="Peer" representedClassName="CamyTalk.Peer" syncable="YES">
         <attribute name="dateLastConnected" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="displayName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isBlocked" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isOnline" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <relationship name="conversation" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Conversation" inverseName="peer" inverseEntity="Conversation" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Peer" positionX="-63" positionY="-18" width="128" height="105"/>
+        <element name="Conversation" positionX="-504" positionY="-234" width="128" height="120"/>
+        <element name="Message" positionX="-234" positionY="-216" width="128" height="90"/>
+        <element name="Peer" positionX="-765" positionY="-234" width="128" height="118"/>
     </elements>
 </model>
