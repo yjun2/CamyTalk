@@ -10,19 +10,21 @@ import UIKit
 import MultipeerConnectivity
 import CoreData
 
-class PeerListViewController: UITableViewController, MCFManagerDelegate{
+class PeerListViewController: UITableViewController, MCFManagerDelegate {
     
     var mpcManager: MCFManager?
     var coreDataHelper: CoreDataHelper?
     var connectedPeer: MCPeerID?
     
+    var conversationVC: ConversationTableViewController!
+    
     var peers = [Peer]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Avaiilable Peers"
+        navigationItem.title = "Available Peers"
         
-        if let results = coreDataHelper?.fetchAll() {
+        if let results = coreDataHelper?.fetchAllObjectsWithEntityName("Peer") as? [Peer] {
             peers = results
         }
         
@@ -30,13 +32,18 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate{
             selector: "fetchAllAgain",
             name: UIApplicationWillEnterForegroundNotification,
             object: nil)
+        
+        // share core data helper object with ConversationViewController
+        let tabBarVCs = self.tabBarController?.viewControllers
+        let navVC = tabBarVCs![1] as! UINavigationController
+        conversationVC = navVC.topViewController as! ConversationTableViewController
+        conversationVC.coreDataHelper = self.coreDataHelper
+        conversationVC.mpcManager = self.mpcManager
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
         mpcManager?.delegate = self
-        
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -61,14 +68,29 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate{
         let indicator = cell.viewWithTag(1001) as? UIImageView
         let status = peers[indexPath.row].isOnline
         
-        if status == false {
-            indicator?.image = UIImage(named: "red-circle-16.png")
-        } else {
-            indicator?.image = UIImage(named: "green-circle-16.png")
-        }
-        
         let label = cell.viewWithTag(1000) as? UILabel
         label?.text = peers[indexPath.row].displayName
+        
+        let attrOfflineString = NSAttributedString (
+            string: peers[indexPath.row].displayName,
+            attributes: [NSForegroundColorAttributeName: UIColor.darkGrayColor(),
+                NSFontAttributeName: UIFont.italicSystemFontOfSize(16)])
+    
+        let attrOnlineString = NSAttributedString (
+            string: peers[indexPath.row].displayName,
+            attributes: [NSForegroundColorAttributeName: UIColor.blackColor()])
+        
+        if status == false {
+            indicator?.image = UIImage(named: "red-circle-16.png")
+            cell.userInteractionEnabled = false
+            label?.attributedText = attrOfflineString
+        } else {
+            indicator?.image = UIImage(named: "green-circle-16.png")
+            cell.userInteractionEnabled = true
+            label?.attributedText = attrOnlineString
+        }
+        
+        
         
         return cell
     }
@@ -80,10 +102,11 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate{
    
     func mpcManagerConnectedPeer(connectedPeerId: MCPeerID) {
         self.connectedPeer = connectedPeerId
+        conversationVC.connectedPeer = self.connectedPeer
     }
     
     func fetchAllAgain() {
-        if let results = coreDataHelper?.fetchAll() {
+        if let results = coreDataHelper?.fetchAllObjectsWithEntityName("Peer") as? [Peer] {
             peers = results
             tableView.reloadData()
         }
@@ -100,10 +123,10 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate{
                 chattingVC.mpcManager = self.mpcManager
                 chattingVC.userName = peers[indexPath.row].displayName
                 chattingVC.connectedPeer = self.connectedPeer
+                chattingVC.coreDataHelper = self.coreDataHelper
                 
-                // fetch or create a conversation object from core data and 
-                // send it over to ChattingViewController
-                // TBD
+                let conversation = coreDataHelper?.fetchOrCreateConversation(mpcManager!.myPeerId, to: self.connectedPeer!)
+                chattingVC.currentConversation = conversation
             }
             
         }

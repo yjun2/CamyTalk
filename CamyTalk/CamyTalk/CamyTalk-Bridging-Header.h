@@ -3,3 +3,4 @@
 //
 
 #import <JSQMessagesViewController/JSQMessages.h>
+#import <UIView+Toast.h>

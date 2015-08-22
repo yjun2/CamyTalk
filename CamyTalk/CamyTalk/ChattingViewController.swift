@@ -12,12 +12,17 @@ import MultipeerConnectivity
 class ChattingViewController: JSQMessagesViewController {
 
     var userName: String!
-    var messages = [JSQMessage]()
     let incomingBubble = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
     let outgoingBubble = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleGreenColor())
     
-    var mpcManager: MCFManager?
+    var mpcManager: MCFManager!
     var connectedPeer: MCPeerID?
+    var currentConversation: Conversation!
+    var coreDataHelper: CoreDataHelper!
+    
+    lazy var conversationTitle: String = {
+       return self.currentConversation.title
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,12 +31,27 @@ class ChattingViewController: JSQMessagesViewController {
         self.senderDisplayName = mpcManager?.myPeerId.displayName
         self.senderId = mpcManager?.myPeerId.displayName
         self.automaticallyScrollsToMostRecentMessage = true
+        
+        if connectedPeer == nil {
+            self.inputToolbar.contentView.textView.editable = false
+            
+            let msg = "\(userName) is not connected.  Message cannot be sent to \(userName)"
+            view.makeToast(msg, duration: 3.0, position: CSToastPositionCenter)
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "handleReceivedMessageDataNotification:", name: "receivedMessageDataNotification", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "handleReceivedMessageDataNotification:",
+            name: "receivedMessageDataNotification",
+            object: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "displayToast:",
+            name: "peerStatusNotification",
+            object: nil)
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -39,6 +59,10 @@ class ChattingViewController: JSQMessagesViewController {
         
         NSNotificationCenter.defaultCenter().removeObserver(self,
             name: "receivedMessageDataNotification",
+            object: nil)
+        
+        NSNotificationCenter.defaultCenter().removeObserver(self,
+            name: "peerStatusNotification",
             object: nil)
     }
         
@@ -49,13 +73,13 @@ class ChattingViewController: JSQMessagesViewController {
     
     // MARK: JSQMessage delegate methods
     override func collectionView(collectionView: JSQMessagesCollectionView!, messageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageData! {
-        var data = self.messages[indexPath.item]
+        var data = coreDataHelper.retrieveMessagesWithConversationTitle(conversationTitle)[indexPath.item]
         return data
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageBubbleImageDataSource! {
         
-        var data = self.messages[indexPath.item]
+        var data = coreDataHelper.retrieveMessagesWithConversationTitle(conversationTitle)[indexPath.item]
         if data.senderId == self.senderId {
             return self.outgoingBubble
         } else {
@@ -68,11 +92,11 @@ class ChattingViewController: JSQMessagesViewController {
     }
     
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.messages.count
+        return coreDataHelper.retrieveMessagesWithConversationTitle(conversationTitle).count
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
-        let data = messages[indexPath.item];
+        let data = coreDataHelper.retrieveMessagesWithConversationTitle(conversationTitle)[indexPath.item]
         
         // Sent by me, skip
         if data.senderId == self.senderId {
@@ -81,7 +105,7 @@ class ChattingViewController: JSQMessagesViewController {
         
         // Same as previous sender, skip
         if indexPath.item > 0 {
-            let previousMessage = messages[indexPath.item - 1];
+            let previousMessage = coreDataHelper.retrieveMessagesWithConversationTitle(conversationTitle)[indexPath.item - 1]
             if previousMessage.senderId == data.senderId {
                 return nil;
             }
@@ -101,7 +125,7 @@ class ChattingViewController: JSQMessagesViewController {
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
-        let message = messages[indexPath.item]
+        let message = coreDataHelper.retrieveMessagesWithConversationTitle(conversationTitle)[indexPath.item]
         
         // Sent by me, skip
         if message.senderId == self.senderId {
@@ -110,7 +134,7 @@ class ChattingViewController: JSQMessagesViewController {
         
         // Same as previous sender, skip
         if indexPath.item > 0 {
-            let previousMessage = messages[indexPath.item - 1];
+            let previousMessage = coreDataHelper.retrieveMessagesWithConversationTitle(conversationTitle)[indexPath.item - 1]
             if previousMessage.senderId == message.senderId {
                 return CGFloat(0.0);
             }
@@ -122,15 +146,14 @@ class ChattingViewController: JSQMessagesViewController {
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
         
+        let dateSent = NSDate()
         var message = JSQMessage(senderId: senderId, displayName: senderDisplayName, text: text)
-        messages.append(message)
         
-        // save the message to core data
-        // TBD
+        // save to core data
+        coreDataHelper.addMessage(currentConversation, jsqMessage: message, sentDate: dateSent)
         
-        // send message using multipeer connectivity
         if let cp = self.connectedPeer {
-            mpcManager?.sendMessage(message.text, toPeer: cp, sentDate: NSDate())
+            mpcManager?.sendMessage(message.text, toPeer: cp, sentDate: dateSent)
         }
         
         finishSendingMessage()
@@ -149,11 +172,32 @@ class ChattingViewController: JSQMessagesViewController {
             message = messageData["message"] {
             
             let receivedMessage = JSQMessage(senderId: from, displayName: from, text: message)
-            messages.append(receivedMessage)
+            coreDataHelper.addMessage(currentConversation, jsqMessage: receivedMessage, sentDate: NSDate())
             
             NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
                 self.finishReceivingMessage()
             })
+        }
+    }
+    
+    // Mark: Toast method
+    func displayToast(notification: NSNotification) {
+        let messageData = notification.object as! Dictionary<String, AnyObject>
+        if (connectedPeer?.displayName == (messageData["peer"] as? MCPeerID)?.displayName) {
+            let isFound = messageData["isFound"] as! Bool
+            changeTextViewStatus(isFound)
+        }
+        
+        view.makeToast(messageData["message"] as? String, duration: 3.0, position: CSToastPositionCenter)
+    }
+    
+    private func changeTextViewStatus(isFound: Bool) {
+        if isFound {
+            self.inputToolbar.contentView.textView.editable = true
+            println("disabled")
+        } else {
+            self.inputToolbar.contentView.textView.editable = false
+            println("enabled")
         }
     }
 }

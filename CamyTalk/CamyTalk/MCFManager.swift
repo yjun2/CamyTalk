@@ -117,8 +117,11 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         
         // invite peer
         browser.invitePeer(peerID, toSession: session, withContext: nil, timeout: 10)
-        
         delegate?.mpcManagerAvailablePeers()
+        
+        let msg = ("\(peerID.displayName) is online")
+        let toastDict: [String: AnyObject] = ["peer": peerID, "isFound": true, "message": msg]
+        NSNotificationCenter.defaultCenter().postNotificationName("peerStatusNotification", object: toastDict)
     }
     
     func browser(browser: MCNearbyServiceBrowser!, lostPeer peerID: MCPeerID!) {
@@ -127,10 +130,12 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         coreDataHelper?.changeOnlineStatus(peerID.displayName, status: false)
         
         // end session
-        println("disconnecting session")
         session?.disconnect()
-        
         delegate?.mpcManagerAvailablePeers()
+        
+        let msg = ("\(peerID.displayName) is offline")
+        let toastDict: [String: AnyObject] = ["peer": peerID, "isFound": false, "message": msg]
+        NSNotificationCenter.defaultCenter().postNotificationName("peerStatusNotification", object: toastDict)
     }
     
     func browser(browser: MCNearbyServiceBrowser!, didNotStartBrowsingForPeers error: NSError!) {
@@ -154,7 +159,6 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         let toPeersArray = [toPeer]
         var error: NSError?
         
-        println("sent message: \(message); to: \(toPeer.displayName)")
         if let dataString = data {
             if session?.sendData(dataString, toPeers: toPeersArray, withMode: MCSessionSendDataMode.Unreliable, error: &error) == nil {
                 println(error?.description)

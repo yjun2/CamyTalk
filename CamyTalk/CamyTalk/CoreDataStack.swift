@@ -36,6 +36,7 @@ class CoreDataStack {
         var coordinator: NSPersistentStoreCoordinator? = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
 
         let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("CamyTalk.sqlite")
+        println("urls: \(url)")
         
         var error: NSError? = nil
         let store: NSPersistentStore? = coordinator!.addPersistentStoreWithType(NSSQLiteStoreType,

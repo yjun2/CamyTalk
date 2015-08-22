@@ -41,16 +41,111 @@ class CoreDataHelper {
         
     }
     
-    func changeAllPeersToOffline() {
-        if let peers = fetchAll() {
-            for peer in peers {
-                changeOnlineStatus(peer.displayName, status: false)
+    func fetchConversationWithTitle(title: String) -> Conversation? {
+        let conversationPredicate = NSPredicate(format: "title == %@", title)
+        
+        let fetchRequest = NSFetchRequest(entityName: "Conversation")
+        fetchRequest.predicate = conversationPredicate
+        
+        var error: NSError?
+        let result = managedContext?.executeFetchRequest(fetchRequest, error: &error) as? [Conversation]
+        
+        if let conversations = result {
+            return conversations[0]
+        } else {
+            return nil
+        }
+    }
+    
+    func fetchOrCreateConversation(from: MCPeerID, to: MCPeerID) -> Conversation? {
+        
+        // try fetching first
+        let title = "\(from.displayName)_\(to.displayName)"
+        let conversationPredicate = NSPredicate(format: "title == %@", title)
+        
+        let fetchRequest = NSFetchRequest(entityName: "Conversation")
+        fetchRequest.predicate = conversationPredicate
+        
+        var error: NSError?
+        let result = managedContext?.executeFetchRequest(fetchRequest, error: &error) as? [Conversation]
+        
+        if let conversations = result {
+            if conversations.count == 0 { // no conversations found, persist a new conversation
+                let conversationEntity = NSEntityDescription.entityForName("Conversation", inManagedObjectContext: managedContext!)
+                let conversation = Conversation(entity: conversationEntity!, insertIntoManagedObjectContext: managedContext)
+                conversation.title = title
+                conversation.fromPeer = from.displayName
+                conversation.toPeer = to.displayName
+                
+                var error: NSError?
+                if !managedContext!.save(&error) {
+                    println("Could not save: \(error)")
+                } else {
+                    println("A converation \(title) is saved")
+                }
+                
+                return conversation
+                
+            } else { // found one.  return the found one
+                println("found conversation: \(conversations[0].title)")
+                return conversations[0]
             }
+        } else {
+            println("Could not fetch \(error)")
+            return nil
+        }
+        
+    }
+    
+    func addMessage(conversation: Conversation, jsqMessage: JSQMessage, sentDate: NSDate) {
+        let messageEntity = NSEntityDescription.entityForName("Message", inManagedObjectContext: managedContext!)
+        let message = Message(entity: messageEntity!, insertIntoManagedObjectContext: managedContext)
+        message.sender = jsqMessage.senderDisplayName
+        message.msg = jsqMessage.text
+        message.dateSent = sentDate
+
+        var msgs = conversation.messages.mutableCopy() as? NSMutableOrderedSet
+        msgs?.addObject(message)
+        
+        conversation.messages = msgs?.copy() as! NSOrderedSet
+        
+        var error: NSError?
+        if !managedContext!.save(&error) {
+            println("Could not save: \(error)")
+        }
+    }
+    
+    func retrieveMessagesWithConversationTitle(conversationTitle: String) -> [JSQMessage] {
+        let conversationPredicate = NSPredicate(format: "title == %@", conversationTitle)
+        
+        let fetchRequest = NSFetchRequest(entityName: "Conversation")
+        fetchRequest.predicate = conversationPredicate
+        
+        var error: NSError?
+        let result = managedContext?.executeFetchRequest(fetchRequest, error: &error) as? [Conversation]
+        
+        var jsqMessages = [JSQMessage]()
+        if let conversations = result {
+            let conversation = conversations[0]
+            let messages = conversation.messages.array as! [Message]
+            for message in messages {
+                let jsqMessage = JSQMessage(senderId: message.sender, displayName: message.sender, text: message.msg )
+                jsqMessages.append(jsqMessage)
+            }   
+        }
+        
+        return jsqMessages
+        
+    }
+    
+    func changeAllPeersToOffline() {
+        let peers = fetchAllObjectsWithEntityName("Peer") as [Peer]
+        for peer in peers {
+            changeOnlineStatus(peer.displayName, status: false)
         }
     }
     
     func fetchPeerCount(peer: MCPeerID) -> Int? {
-        
         let peerPredicate = NSPredicate(format: "displayName == %@", peer.displayName)
         
         let fetchRequest = NSFetchRequest(entityName: "Peer")
@@ -82,19 +177,17 @@ class CoreDataHelper {
         }
     }
     
-    func fetchAll() -> [Peer]? {
-        let fetchRequest = NSFetchRequest(entityName: "Peer")
+    func fetchAllObjectsWithEntityName<T: NSManagedObject>(entityName: String) -> [T] {
+        let fetchRequest = NSFetchRequest(entityName: entityName)
         
         var error: NSError?
-        let fetchResults = managedContext?.executeFetchRequest(fetchRequest, error: &error) as? [Peer]
+        let fetchResults = managedContext?.executeFetchRequest(fetchRequest, error: &error) as? [T]
         
         if let results = fetchResults {
             return results
         } else {
-            println("Could not fetch \(error)")
-            return nil
+            return [T]()
         }
-        
     }
 
 }

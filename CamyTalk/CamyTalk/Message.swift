@@ -11,6 +11,7 @@ import CoreData
 
 class Message: NSManagedObject {
 
+    @NSManaged var sender: String
     @NSManaged var dateSent: NSDate
     @NSManaged var msg: String
     @NSManaged var conversation: Conversation

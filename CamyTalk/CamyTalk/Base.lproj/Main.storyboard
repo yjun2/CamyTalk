@@ -75,7 +75,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zuy-dg-4fL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2259" y="-725"/>
+            <point key="canvasLocation" x="2359" y="-369"/>
         </scene>
         <!--Conversations-->
         <scene sceneID="fYA-oy-26c">
@@ -86,11 +86,29 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Conversation" id="Snz-fB-FVH">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="Conversation" id="Snz-fB-FVH">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Snz-fB-FVH" id="6hB-W6-030">
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" tag="9000" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yas-MF-1u5">
+                                            <rect key="frame" x="25" y="11" width="400" height="21"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="400" id="YHr-r3-mkJ"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Yas-MF-1u5" firstAttribute="top" secondItem="6hB-W6-030" secondAttribute="topMargin" constant="3" id="MPL-El-wu0"/>
+                                        <constraint firstItem="Yas-MF-1u5" firstAttribute="leading" secondItem="6hB-W6-030" secondAttribute="leadingMargin" constant="17" id="X4d-6y-1xA"/>
+                                    </constraints>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="dg4-cx-wHD" kind="show" identifier="toChatVC" id="6ct-xL-V4p"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -206,4 +224,7 @@
         <image name="peers_32.png" width="32" height="32"/>
         <image name="settings_32.png" width="32" height="32"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="6ct-xL-V4p"/>
+    </inferredMetricsTieBreakers>
 </document>
