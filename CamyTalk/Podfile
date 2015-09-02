@@ -1,2 +1,3 @@
 pod 'JSQMessagesViewController'
 pod 'Toast', '~> 2.4'
+pod 'MLPAccessoryBadge'

@@ -20,6 +20,8 @@ class ConversationTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Conversations"
+        
         if let results = coreDataHelper?.fetchAllObjectsWithEntityName("Conversation") as? [Conversation] {
             conversations = results
         }
@@ -32,6 +34,13 @@ class ConversationTableViewController: UITableViewController {
             selector: "displayToast:",
             name: "peerStatusNotification",
             object: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "notifyNewMessageDataNotification:",
+            name: "newMessageDataNotification",
+            object: nil)
+        
+        tableView.reloadData()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -39,6 +48,10 @@ class ConversationTableViewController: UITableViewController {
         
         NSNotificationCenter.defaultCenter().removeObserver(self,
             name: "peerStatusNotification",
+            object: nil)
+        
+        NSNotificationCenter.defaultCenter().removeObserver(self,
+            name: "newMessageDataNotification",
             object: nil)
     }
     
@@ -59,6 +72,19 @@ class ConversationTableViewController: UITableViewController {
         
         let label = cell.viewWithTag(9000) as? UILabel
         label?.text = conversations[indexPath.row].toPeer
+        
+        var badge = MLPAccessoryBadge()
+        badge.cornerRadius = 100
+        badge.setText("New")
+        badge.backgroundColor = UIColor.redColor()
+        
+        let didReceiveAllMessages = conversations[indexPath.row].messagesAllReceived
+        if didReceiveAllMessages == false {
+            cell.accessoryView = badge
+        } else {
+            cell.accessoryView = nil
+        }
+        
 
         return cell
     }
@@ -89,7 +115,7 @@ class ConversationTableViewController: UITableViewController {
                 chattingVC.userName = conversations[indexPath.row].toPeer
                 chattingVC.connectedPeer = self.connectedPeer
                 chattingVC.coreDataHelper = self.coreDataHelper
-            
+                
                 let conversation = coreDataHelper!.fetchConversationWithTitle(conversations[indexPath.row].title)
                 chattingVC.currentConversation = conversation
             }
@@ -102,6 +128,11 @@ class ConversationTableViewController: UITableViewController {
         if let msg = messageData["message"] as? String {
             view.makeToast(msg, duration: 3.0, position: CSToastPositionCenter)
         }
+    }
+    
+    func notifyNewMessageDataNotification(notification: NSNotification) {
+        view.makeToast("New message received", duration: 3.0, position: CSToastPositionCenter)
+        tableView.reloadData()
     }
 
 }

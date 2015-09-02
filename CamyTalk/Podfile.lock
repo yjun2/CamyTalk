@@ -2,15 +2,18 @@ PODS:
   - JSQMessagesViewController (7.1.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
+  - MLPAccessoryBadge (1.0)
   - Toast (2.4)
 
 DEPENDENCIES:
   - JSQMessagesViewController
+  - MLPAccessoryBadge
   - Toast (~> 2.4)
 
 SPEC CHECKSUMS:
   JSQMessagesViewController: ca11f86fa68ca70835f05e169df9244147c1dc40
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
+  MLPAccessoryBadge: a289a31b657b8c4123b7fefb8853d18bded31988
   Toast: 0773b8fc0e97352ca6054517bec7ebdd4110029d
 
 COCOAPODS: 0.37.1

@@ -4,3 +4,4 @@
 
 #import <JSQMessagesViewController/JSQMessages.h>
 #import <UIView+Toast.h>
+#import <MLPAccessoryBadge/MLPAccessoryBadge.h>

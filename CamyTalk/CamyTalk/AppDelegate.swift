@@ -32,6 +32,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         viewController.mpcManager = mpcManager
         viewController.coreDataHelper = coreDataHelper
         
+        application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: UIUserNotificationType.Sound |
+            UIUserNotificationType.Alert | UIUserNotificationType.Badge, categories: nil))
+        
         return true
     }
 
@@ -59,6 +62,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         coreDataStack.saveContext()
     }
 
-    
+    func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {
+        if application.applicationState == .Active {
+            NSNotificationCenter.defaultCenter().postNotificationName("newMessageDataNotification", object: nil)
+        }
+        
+        
+    }
 }
 

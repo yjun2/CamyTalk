@@ -69,6 +69,10 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     }
     
     // MARK: MCSessionDelegate
+    func session(session: MCSession!, didReceiveCertificate certificate: [AnyObject]!, fromPeer peerID: MCPeerID!, certificateHandler: ((Bool) -> Void)!) {
+        certificateHandler(true)
+    }
+    
     func session(session: MCSession!, peer peerID: MCPeerID!, didChangeState state: MCSessionState) {
         switch state {
             case .Connected:
@@ -78,20 +82,39 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
                 println("Connecting to \(peerID.displayName)")
             case .NotConnected:
                 println("Not connected: \(peerID.displayName)")
-                coreDataHelper?.changeAllPeersToOffline()
+                coreDataHelper?.changeOnlineStatus(peerID.displayName, status: false)
                 delegate?.mpcManagerAvailablePeers()
         }
     }
     
     func session(session: MCSession!, didReceiveData data: NSData!, fromPeer peerID: MCPeerID!) {
         
-        let message = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
-        println("Received message from peer: \(peerID.displayName), message: \(message)")
+        let peer = coreDataHelper?.fetchPeer(peerID.displayName)
+        if let p = peer {
+            if p.isBlocked == false {
+                let message = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
+                println("Received message from peer: \(peerID.displayName), message: \(message)")
         
-        let messageDict: [String: String] = ["from": peerID.displayName, "message": message]
-        NSNotificationCenter.defaultCenter().postNotificationName("receivedMessageDataNotification", object: messageDict)
+                let title = "\(myPeerId.displayName)_\(peerID.displayName)"
+                let conversation = coreDataHelper?.fetchConversationWithTitle(title)
+        
+                let receivedMessage = JSQMessage(senderId: peerID.displayName, displayName: peerID.displayName, text: message)
+                coreDataHelper?.addMessage(conversation!, jsqMessage: receivedMessage, sentDate: NSDate())
+        
+                // send local notification
+                var localNotification = UILocalNotification()
+                localNotification.alertBody = "\(message)"
+                localNotification.fireDate = NSDate(timeIntervalSinceNow: 3)
+                UIApplication.sharedApplication().scheduleLocalNotification(localNotification)
+        
+                coreDataHelper?.updateConversationStatus(conversation!, isMessagesAllReceived: false)            
+                
+                NSNotificationCenter.defaultCenter().postNotificationName("receivedMessageDataNotification", object: nil)
+            }
+        }
     }
     
+
     func session(session: MCSession!, didStartReceivingResourceWithName resourceName: String!, fromPeer peerID: MCPeerID!, withProgress progress: NSProgress!) {}
     
     func session(session: MCSession!, didFinishReceivingResourceWithName resourceName: String!, fromPeer peerID: MCPeerID!, atURL localURL: NSURL!, withError error: NSError!) {}
@@ -107,21 +130,35 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
             if count == 0 { // not saved in core data yet
                 println("adding new peer '\(peerID.displayName)' to core data")
                 coreDataHelper?.savePeer(peerID)
+                
+                // invite peer
+                browser.invitePeer(peerID, toSession: session, withContext: nil, timeout: 10)
+                delegate?.mpcManagerAvailablePeers()
+                
             } else {
                 println("\(peerID.displayName) already exist in core data")
                 
-                // change the online status to true
-                coreDataHelper?.changeOnlineStatus(peerID.displayName, status: true)
+                // check for blocked status
+                let peer = coreDataHelper?.fetchPeer(peerID.displayName)
+                if let p = peer {
+                    let isBlocked = p.isBlocked
+                    if isBlocked == false {
+                        coreDataHelper?.changeOnlineStatus(peerID.displayName, status: true)
+                        
+                        // invite peer
+                        browser.invitePeer(peerID, toSession: session, withContext: nil, timeout: 10)
+                        delegate?.mpcManagerAvailablePeers()
+                        
+                        let msg = ("\(peerID.displayName) is online")
+                        let toastDict: [String: AnyObject] = ["peer": peerID, "isFound": true, "message": msg]
+                        NSNotificationCenter.defaultCenter().postNotificationName("peerStatusNotification", object: toastDict)
+                        
+                    } else {
+                        println("\(p.displayName) is blocked.  Will not invite to connect")
+                    }
+                }
             }
         }
-        
-        // invite peer
-        browser.invitePeer(peerID, toSession: session, withContext: nil, timeout: 10)
-        delegate?.mpcManagerAvailablePeers()
-        
-        let msg = ("\(peerID.displayName) is online")
-        let toastDict: [String: AnyObject] = ["peer": peerID, "isFound": true, "message": msg]
-        NSNotificationCenter.defaultCenter().postNotificationName("peerStatusNotification", object: toastDict)
     }
     
     func browser(browser: MCNearbyServiceBrowser!, lostPeer peerID: MCPeerID!) {
@@ -143,7 +180,6 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     }
     
     // MARK: Advertiser delegate
-    
     func advertiser(advertiser: MCNearbyServiceAdvertiser!, didReceiveInvitationFromPeer peerID: MCPeerID!, withContext context: NSData!, invitationHandler: ((Bool, MCSession!) -> Void)!) {
         
         invitationHandler(true, session)
@@ -165,7 +201,7 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
                 return false
             }
         }
-        
+
         return true
     }
 

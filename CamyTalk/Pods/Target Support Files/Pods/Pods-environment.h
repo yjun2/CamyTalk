@@ -18,6 +18,12 @@
 #define COCOAPODS_VERSION_MINOR_JSQSystemSoundPlayer 0
 #define COCOAPODS_VERSION_PATCH_JSQSystemSoundPlayer 1
 
+// MLPAccessoryBadge
+#define COCOAPODS_POD_AVAILABLE_MLPAccessoryBadge
+#define COCOAPODS_VERSION_MAJOR_MLPAccessoryBadge 1
+#define COCOAPODS_VERSION_MINOR_MLPAccessoryBadge 0
+#define COCOAPODS_VERSION_PATCH_MLPAccessoryBadge 0
+
 // Toast
 #define COCOAPODS_POD_AVAILABLE_Toast
 #define COCOAPODS_VERSION_MAJOR_Toast 2

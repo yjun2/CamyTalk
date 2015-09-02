@@ -31,6 +31,9 @@ class ChattingViewController: JSQMessagesViewController {
         self.senderDisplayName = mpcManager?.myPeerId.displayName
         self.senderId = mpcManager?.myPeerId.displayName
         self.automaticallyScrollsToMostRecentMessage = true
+     
+        // mark that all messages were received
+        coreDataHelper?.updateConversationStatus(currentConversation, isMessagesAllReceived: true)
         
         if connectedPeer == nil {
             self.inputToolbar.contentView.textView.editable = false
@@ -163,21 +166,15 @@ class ChattingViewController: JSQMessagesViewController {
     }
     
     // MARK: NSNotification method
-    
     func handleReceivedMessageDataNotification(notification: NSNotification) {
         JSQSystemSoundPlayer.jsq_playMessageReceivedSound()
         
-        let messageData = notification.object as! Dictionary<String, String>
-        if let from = messageData["from"],
-            message = messageData["message"] {
-            
-            let receivedMessage = JSQMessage(senderId: from, displayName: from, text: message)
-            coreDataHelper.addMessage(currentConversation, jsqMessage: receivedMessage, sentDate: NSDate())
-            
-            NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
-                self.finishReceivingMessage()
-            })
-        }
+        // mark that all messages were received
+        coreDataHelper?.updateConversationStatus(currentConversation, isMessagesAllReceived: true)
+        
+        NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+            self.finishReceivingMessage()
+        })
     }
     
     // Mark: Toast method
@@ -194,10 +191,8 @@ class ChattingViewController: JSQMessagesViewController {
     private func changeTextViewStatus(isFound: Bool) {
         if isFound {
             self.inputToolbar.contentView.textView.editable = true
-            println("disabled")
         } else {
             self.inputToolbar.contentView.textView.editable = false
-            println("enabled")
         }
     }
 }

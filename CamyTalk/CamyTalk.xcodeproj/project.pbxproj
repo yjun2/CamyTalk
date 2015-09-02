@@ -19,6 +19,7 @@
 		2E92F6D81B7C6013009A3FBB /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E92F6D71B7C6013009A3FBB /* Conversation.swift */; };
 		2E92F6DA1B7C6013009A3FBB /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E92F6D91B7C6013009A3FBB /* Message.swift */; };
 		2E92F6DC1B7C619D009A3FBB /* Peer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E92F6DB1B7C619D009A3FBB /* Peer.swift */; };
+		2EE558871B955BCB00A45BD3 /* BlockedPeerListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE558861B955BCB00A45BD3 /* BlockedPeerListTableViewController.swift */; };
 		2EFE16331B66DF5D00C8606C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFE16321B66DF5D00C8606C /* AppDelegate.swift */; };
 		2EFE16361B66DF5D00C8606C /* CamyTalk.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2EFE16341B66DF5D00C8606C /* CamyTalk.xcdatamodeld */; };
 		2EFE163B1B66DF5D00C8606C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2EFE16391B66DF5D00C8606C /* Main.storyboard */; };
@@ -55,6 +56,7 @@
 		2E92F6D71B7C6013009A3FBB /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		2E92F6D91B7C6013009A3FBB /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		2E92F6DB1B7C619D009A3FBB /* Peer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Peer.swift; sourceTree = "<group>"; };
+		2EE558861B955BCB00A45BD3 /* BlockedPeerListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedPeerListTableViewController.swift; sourceTree = "<group>"; };
 		2EFE162D1B66DF5D00C8606C /* CamyTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CamyTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EFE16311B66DF5D00C8606C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2EFE16321B66DF5D00C8606C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 				2E284A881B79CB7D00414B02 /* ChattingViewController.swift */,
 				2E284A7A1B79AB5600414B02 /* ConversationTableViewController.swift */,
 				2EFE16591B66E36500C8606C /* SettingsViewController.swift */,
+				2EE558861B955BCB00A45BD3 /* BlockedPeerListTableViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -359,6 +362,7 @@
 				2E31A8F31B69F10400174056 /* CoreDataHelper.swift in Sources */,
 				2EFE16361B66DF5D00C8606C /* CamyTalk.xcdatamodeld in Sources */,
 				2EFE165A1B66E36500C8606C /* SettingsViewController.swift in Sources */,
+				2EE558871B955BCB00A45BD3 /* BlockedPeerListTableViewController.swift in Sources */,
 				2EFE16601B672C1000C8606C /* MCFManager.swift in Sources */,
 				2E92F6D81B7C6013009A3FBB /* Conversation.swift in Sources */,
 				2E284A8B1B79D69800414B02 /* ChattingViewController.swift in Sources */,

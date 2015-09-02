@@ -177,8 +177,51 @@ class CoreDataHelper {
         }
     }
     
-    func fetchAllObjectsWithEntityName<T: NSManagedObject>(entityName: String) -> [T] {
+    func updatePeerBlockedStatus(peer: Peer, blocked: Bool) {
+        peer.isBlocked = blocked
+        
+        var error: NSError?
+        if !managedContext!.save(&error) {
+            println("Could not save: \(error)")
+        } else {
+            println("\(peer.displayName) isBlocked status is changed to \(blocked.boolValue)")
+        }
+    }
+    
+    func updateConversationStatus(conversation: Conversation, isMessagesAllReceived: Bool) {
+        conversation.messagesAllReceived = isMessagesAllReceived
+        
+        var error: NSError?
+        if !managedContext!.save(&error) {
+            println("Could not save: \(error)")
+        }
+    }
+    
+    func fetchPeer(displayName: String) -> Peer? {
+        let peerPredicate = NSPredicate(format: "displayName == %@", displayName)
+        
+        let fetchRequest = NSFetchRequest(entityName: "Peer")
+        fetchRequest.predicate = peerPredicate
+        
+        var error: NSError?
+        let peers = managedContext?.executeFetchRequest(fetchRequest, error: &error) as? [Peer]
+        
+        if let peers = peers {
+            return peers[0]
+        } else {
+            return nil
+        }
+
+
+    }
+    
+    func fetchAllObjectsWithEntityName<T: NSManagedObject>(entityName: String, includeBlocked: Bool? = nil) -> [T] {
         let fetchRequest = NSFetchRequest(entityName: entityName)
+        
+        if let blockedPeer = includeBlocked {
+            let blockedPredicate = NSPredicate(format: "isBlocked = %@", blockedPeer)
+            fetchRequest.predicate = blockedPredicate
+        }
         
         var error: NSError?
         let fetchResults = managedContext?.executeFetchRequest(fetchRequest, error: &error) as? [T]

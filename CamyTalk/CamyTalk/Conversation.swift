@@ -16,5 +16,6 @@ class Conversation: NSManagedObject {
     @NSManaged var title: String
     @NSManaged var messages: NSOrderedSet
     @NSManaged var peer: Peer
+    @NSManaged var messagesAllReceived: NSNumber
 
 }

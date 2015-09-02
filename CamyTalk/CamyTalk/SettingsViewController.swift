@@ -8,8 +8,11 @@
 
 import UIKit
 
-class SettingsViewController: UIViewController {
+class SettingsViewController: UITableViewController {
 
+    var coreDataHelper: CoreDataHelper?
+    var mpcManager: MCFManager?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -22,14 +25,20 @@ class SettingsViewController: UIViewController {
     }
     
 
-    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "toBlockedVC" {
+            let blockedVC = segue.destinationViewController as! BlockedPeerListTableViewController
+            
+            if let indexPath = tableView.indexPathForCell(sender as! UITableViewCell) {
+                blockedVC.mpcManager = self.mpcManager
+                blockedVC.coreDataHelper = self.coreDataHelper
+            }
+            
+        }
     }
-    */
+
 
 }
