@@ -14,7 +14,6 @@ class Peer: NSManagedObject {
     @NSManaged var dateLastConnected: NSDate
     @NSManaged var displayName: String
     @NSManaged var isBlocked: NSNumber
-    @NSManaged var isOnline: NSNumber
     @NSManaged var conversation: NSSet
 
 }

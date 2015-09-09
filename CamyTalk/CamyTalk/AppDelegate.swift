@@ -20,6 +20,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        // Configure tracker from Google Analytics
+        var configureError: NSError?
+        GGLContext.sharedInstance().configureWithError(&configureError)
+        assert(configureError == nil, "Error configuring Google services: \(configureError)")
+        
+        var gai = GAI.sharedInstance()
+        gai.trackUncaughtExceptions = true
+        gai.logger.logLevel = GAILogLevel.Verbose
+        
         // initialize CoreDataHelper
         mpcManager.coreDataHelper = coreDataHelper
         
@@ -42,9 +51,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
-        // change all peers to offline
-        coreDataHelper.changeAllPeersToOffline()
-        
         coreDataStack.saveContext()
     }
 
@@ -55,10 +61,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationWillTerminate(application: UIApplication) {
-        
-        // change all peers to offline
-        coreDataHelper.changeAllPeersToOffline()
-        
         coreDataStack.saveContext()
     }
 

@@ -46,6 +46,13 @@ class ChattingViewController: JSQMessagesViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        // Track this controller using Google Analytics
+        var tracker = GAI.sharedInstance().defaultTracker
+        tracker.set(kGAIScreenName, value: "Chatting View Controller")
+        
+        var builder = GAIDictionaryBuilder.createScreenView()
+        tracker.send(builder.build() as [NSObject: AnyObject])
+        
         NSNotificationCenter.defaultCenter().addObserver(self,
             selector: "handleReceivedMessageDataNotification:",
             name: "receivedMessageDataNotification",

@@ -17,7 +17,7 @@ class CoreDataHelper {
         self.managedContext = managedContext
     }
     
-    func changeOnlineStatus(peer: String, status: Bool) {
+    func changeLastConnectedDate(peer: String) {
         let peerPredicate = NSPredicate(format: "displayName == %@", peer)
         
         let fetchRequest = NSFetchRequest(entityName: "Peer")
@@ -27,8 +27,7 @@ class CoreDataHelper {
         let fetchResults = managedContext?.executeFetchRequest(fetchRequest, error: &error) as? [Peer]
         
         if let results = fetchResults {
-            // there is always only one unique peer
-            results[0].isOnline = status
+            results[0].dateLastConnected = NSDate()
             
             var error: NSError?
             if !managedContext!.save(&error) {
@@ -138,13 +137,6 @@ class CoreDataHelper {
         
     }
     
-    func changeAllPeersToOffline() {
-        let peers = fetchAllObjectsWithEntityName("Peer") as [Peer]
-        for peer in peers {
-            changeOnlineStatus(peer.displayName, status: false)
-        }
-    }
-    
     func fetchPeerCount(peer: MCPeerID) -> Int? {
         let peerPredicate = NSPredicate(format: "displayName == %@", peer.displayName)
         
@@ -167,7 +159,6 @@ class CoreDataHelper {
         peer.displayName = newPeer.displayName
         peer.isBlocked = false
         peer.dateLastConnected = NSDate()
-        peer.isOnline = true
         
         var error: NSError?
         if !managedContext!.save(&error) {

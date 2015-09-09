@@ -18,8 +18,8 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate {
     var conversationVC: ConversationTableViewController!
     var settingsVC: SettingsViewController!
     
-    @IBOutlet weak var statusLabl: UILabel!
     var peers = [Peer]()
+    var status: String = "Not connected"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +52,13 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         mpcManager?.delegate = self
+        
+        // Track this controller using Google Analytics
+        var tracker = GAI.sharedInstance().defaultTracker
+        tracker.set(kGAIScreenName, value: "Peer Listview Controller")
+        
+        var builder = GAIDictionaryBuilder.createScreenView()
+        tracker.send(builder.build() as [NSObject: AnyObject])
         
         if let results = coreDataHelper?.fetchAllObjectsWithEntityName("Peer", includeBlocked: false) as? [Peer] {
             peers = results
@@ -87,29 +94,26 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Peer", forIndexPath: indexPath) as! UITableViewCell
         
-        let indicator = cell.viewWithTag(1001) as? UIImageView
-        let status = peers[indexPath.row].isOnline
-        
+        let rowPeer = peers[indexPath.row].displayName
         let peerLabel = cell.viewWithTag(1000) as? UILabel
-        peerLabel?.text = peers[indexPath.row].displayName
+        peerLabel?.text = rowPeer
         
-        let statusLabel = cell.viewWithTag(1002) as? UILabel
-
-        let attrOfflineString = NSAttributedString (
-            string: peers[indexPath.row].displayName,
-            attributes: [NSForegroundColorAttributeName: UIColor.darkGrayColor(),
-                NSFontAttributeName: UIFont.italicSystemFontOfSize(16)])
-    
-        let attrOnlineString = NSAttributedString (
-            string: peers[indexPath.row].displayName,
-            attributes: [NSForegroundColorAttributeName: UIColor.blackColor()])
+        let lastConnectLabel = cell.viewWithTag(1002) as? UILabel
+        lastConnectLabel?.text = formatDate(peers[indexPath.row].dateLastConnected)
         
-        if status == false {
-            indicator?.image = UIImage(named: "red-circle-16.png")
-            peerLabel?.attributedText = attrOfflineString
+        let statusLabel = cell.viewWithTag(1003) as? UILabel
+        
+        if self.connectedPeer?.displayName == rowPeer {
+            if self.status == "Not connected" {
+                statusLabel?.attributedText = attrOfflineString(self.status)
+                cell.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1.0)
+            } else {
+                statusLabel?.attributedText = attrOnlineString(self.status)
+                cell.backgroundColor = UIColor.whiteColor()
+            }
         } else {
-            indicator?.image = UIImage(named: "green-circle-16.png")
-            peerLabel?.attributedText = attrOnlineString
+            statusLabel?.attributedText = attrOfflineString("Not connected")
+            cell.backgroundColor = UIColor(red: 220/255, green: 220/255, blue: 220/255, alpha: 1.0)
         }
     
         return cell
@@ -128,20 +132,33 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate {
     }
     
     // MARK: MCFManagerDelegate
-    func mpcManagerAvailablePeers() {
+    func mpcManagerAvailablePeers(status: String) {
+        self.status = status
         fetchAllAgain()
     }
    
-    func mpcManagerConnectedPeer(connectedPeerId: MCPeerID) {
+    func mpcManagerConnectedPeer(connectedPeerId: MCPeerID, status: String) {
         self.connectedPeer = connectedPeerId
+        self.status = status
         conversationVC.connectedPeer = self.connectedPeer
+        fetchAllAgain()
+        
+        // Send an event to Google analytics
+        var tracker = GAI.sharedInstance().defaultTracker
+        
+        var builder = GAIDictionaryBuilder.createEventWithCategory("Connect Peer", action: "Found peer", label: "Connect", value: nil)
+        tracker.send(builder.build() as [NSObject: AnyObject])
     }
     
     func fetchAllAgain() {
         if let results = coreDataHelper?.fetchAllObjectsWithEntityName("Peer", includeBlocked: false) as? [Peer] {
             peers = results
-            tableView.reloadData()
         }
+        
+        NSOperationQueue.mainQueue().addOperationWithBlock({ () -> Void in
+            self.tableView.reloadData()
+        })
+        
     }
     
     // MARK: - Navigation
@@ -167,5 +184,33 @@ class PeerListViewController: UITableViewController, MCFManagerDelegate {
     // MARK: NSNotification
     func notifyNewMessageDataNotification(notification: NSNotification) {
         view.makeToast("New message received", duration: 3.0, position: CSToastPositionCenter)
+    }
+    
+    // MARK: private methods
+    private func attrOfflineString(str: String) -> NSAttributedString {
+        let offlineString = NSAttributedString (
+            string: str,
+            attributes: [NSForegroundColorAttributeName: UIColor.redColor(),
+                NSFontAttributeName: UIFont.italicSystemFontOfSize(14)])
+        
+        return offlineString
+    }
+    
+    private func attrOnlineString(str: String) -> NSAttributedString {
+        let onlineString = NSAttributedString (
+            string: str,
+            attributes: [NSForegroundColorAttributeName: UIColor.blueColor()])
+        
+        return onlineString
+    }
+    
+    private func formatDate(date: NSDate) -> String {
+        let formatter = NSDateFormatter()
+        formatter.dateStyle = NSDateFormatterStyle.ShortStyle
+        formatter.timeStyle = .ShortStyle
+        
+        let dateString = formatter.stringFromDate(date)
+        
+        return dateString
     }
 }

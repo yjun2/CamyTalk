@@ -11,8 +11,8 @@ import MultipeerConnectivity
 import CoreData
 
 protocol MCFManagerDelegate: class {
-    func mpcManagerAvailablePeers()
-    func mpcManagerConnectedPeer(connectedPeerId: MCPeerID)
+    func mpcManagerAvailablePeers(status: String)
+    func mpcManagerConnectedPeer(connectedPeerId: MCPeerID, status: String)
 }
 
 class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, MCNearbyServiceAdvertiserDelegate {
@@ -77,18 +77,27 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
         switch state {
             case .Connected:
                 println("Connected to \(peerID.displayName)")
-                delegate?.mpcManagerConnectedPeer(peerID)
+                coreDataHelper?.changeLastConnectedDate(peerID.displayName)
+                delegate?.mpcManagerConnectedPeer(peerID, status: "Connected")
+            
+                let msg = ("\(peerID.displayName) is online")
+                let toastDict: [String: AnyObject] = ["peer": peerID, "isFound": true, "message": msg]
+                NSNotificationCenter.defaultCenter().postNotificationName("peerStatusNotification", object: toastDict)
+            
             case .Connecting:
                 println("Connecting to \(peerID.displayName)")
             case .NotConnected:
+                
                 println("Not connected: \(peerID.displayName)")
-                coreDataHelper?.changeOnlineStatus(peerID.displayName, status: false)
-                delegate?.mpcManagerAvailablePeers()
+                delegate?.mpcManagerAvailablePeers("Not connected")
+            
+                let msg = ("\(peerID.displayName) is offline")
+                let toastDict: [String: AnyObject] = ["peer": peerID, "isFound": false, "message": msg]
+                NSNotificationCenter.defaultCenter().postNotificationName("peerStatusNotification", object: toastDict)
         }
     }
     
     func session(session: MCSession!, didReceiveData data: NSData!, fromPeer peerID: MCPeerID!) {
-        
         let peer = coreDataHelper?.fetchPeer(peerID.displayName)
         if let p = peer {
             if p.isBlocked == false {
@@ -124,34 +133,31 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     // MARK: Browser delegate
     func browser(browser: MCNearbyServiceBrowser!, foundPeer peerID: MCPeerID!, withDiscoveryInfo info: [NSObject : AnyObject]!) {
         println("found peer id: \(peerID.displayName)")
+    
+        let shouldInvite = myPeerId.displayName > peerID.displayName
+        println("shouldInvite: \(shouldInvite.boolValue)")
         
         // fetch core data to see if the peer is already saved
         if let count = coreDataHelper?.fetchPeerCount(peerID) {
             if count == 0 { // not saved in core data yet
-                println("adding new peer '\(peerID.displayName)' to core data")
                 coreDataHelper?.savePeer(peerID)
                 
                 // invite peer
-                browser.invitePeer(peerID, toSession: session, withContext: nil, timeout: 10)
-                delegate?.mpcManagerAvailablePeers()
+                if shouldInvite {
+                    browser.invitePeer(peerID, toSession: self.session, withContext: nil, timeout: 10)
+                }
                 
             } else {
-                println("\(peerID.displayName) already exist in core data")
-                
                 // check for blocked status
                 let peer = coreDataHelper?.fetchPeer(peerID.displayName)
                 if let p = peer {
                     let isBlocked = p.isBlocked
                     if isBlocked == false {
-                        coreDataHelper?.changeOnlineStatus(peerID.displayName, status: true)
                         
                         // invite peer
-                        browser.invitePeer(peerID, toSession: session, withContext: nil, timeout: 10)
-                        delegate?.mpcManagerAvailablePeers()
-                        
-                        let msg = ("\(peerID.displayName) is online")
-                        let toastDict: [String: AnyObject] = ["peer": peerID, "isFound": true, "message": msg]
-                        NSNotificationCenter.defaultCenter().postNotificationName("peerStatusNotification", object: toastDict)
+                        if shouldInvite {
+                            browser.invitePeer(peerID, toSession: self.session, withContext: nil, timeout: 10)
+                        }
                         
                     } else {
                         println("\(p.displayName) is blocked.  Will not invite to connect")
@@ -162,17 +168,10 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     }
     
     func browser(browser: MCNearbyServiceBrowser!, lostPeer peerID: MCPeerID!) {
-        
         println("lost peer id: \(peerID.displayName)")
-        coreDataHelper?.changeOnlineStatus(peerID.displayName, status: false)
         
         // end session
-        session?.disconnect()
-        delegate?.mpcManagerAvailablePeers()
-        
-        let msg = ("\(peerID.displayName) is offline")
-        let toastDict: [String: AnyObject] = ["peer": peerID, "isFound": false, "message": msg]
-        NSNotificationCenter.defaultCenter().postNotificationName("peerStatusNotification", object: toastDict)
+//        session?.disconnect()
     }
     
     func browser(browser: MCNearbyServiceBrowser!, didNotStartBrowsingForPeers error: NSError!) {
@@ -182,7 +181,8 @@ class MCFManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, M
     // MARK: Advertiser delegate
     func advertiser(advertiser: MCNearbyServiceAdvertiser!, didReceiveInvitationFromPeer peerID: MCPeerID!, withContext context: NSData!, invitationHandler: ((Bool, MCSession!) -> Void)!) {
         
-        invitationHandler(true, session)
+        invitationHandler(true, self.session)
+        
     }
     
     func advertiser(advertiser: MCNearbyServiceAdvertiser!, didNotStartAdvertisingPeer error: NSError!) {

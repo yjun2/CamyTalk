@@ -30,6 +30,13 @@ class ConversationTableViewController: UITableViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        // Track this controller using Google Analytics
+        var tracker = GAI.sharedInstance().defaultTracker
+        tracker.set(kGAIScreenName, value: "Conversation View Controller")
+        
+        var builder = GAIDictionaryBuilder.createScreenView()
+        tracker.send(builder.build() as [NSObject: AnyObject])
+        
         NSNotificationCenter.defaultCenter().addObserver(self,
             selector: "displayToast:",
             name: "peerStatusNotification",
@@ -69,9 +76,11 @@ class ConversationTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCellWithIdentifier("Conversation", forIndexPath: indexPath) as! UITableViewCell
+        cell.textLabel?.text = conversations[indexPath.row].toPeer
         
-        let label = cell.viewWithTag(9000) as? UILabel
-        label?.text = conversations[indexPath.row].toPeer
+        let latestMsgIndex = coreDataHelper?.retrieveMessagesWithConversationTitle(conversations[indexPath.row].title).count
+        let message = conversations[indexPath.row].messages[latestMsgIndex! - 1] as? Message
+        cell.detailTextLabel?.text = message?.msg
         
         var badge = MLPAccessoryBadge()
         badge.cornerRadius = 100
@@ -88,19 +97,6 @@ class ConversationTableViewController: UITableViewController {
 
         return cell
     }
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
     
     // MARK: - Navigation
 

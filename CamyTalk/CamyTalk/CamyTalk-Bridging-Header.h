@@ -5,3 +5,4 @@
 #import <JSQMessagesViewController/JSQMessages.h>
 #import <UIView+Toast.h>
 #import <MLPAccessoryBadge/MLPAccessoryBadge.h>
+#import <Google/Analytics.h>

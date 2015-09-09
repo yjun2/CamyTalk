@@ -19,6 +19,7 @@
 		2E92F6D81B7C6013009A3FBB /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E92F6D71B7C6013009A3FBB /* Conversation.swift */; };
 		2E92F6DA1B7C6013009A3FBB /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E92F6D91B7C6013009A3FBB /* Message.swift */; };
 		2E92F6DC1B7C619D009A3FBB /* Peer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E92F6DB1B7C619D009A3FBB /* Peer.swift */; };
+		2EA733801B9FE6FD00C57FED /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2EA7337F1B9FE6FD00C57FED /* GoogleService-Info.plist */; };
 		2EE558871B955BCB00A45BD3 /* BlockedPeerListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE558861B955BCB00A45BD3 /* BlockedPeerListTableViewController.swift */; };
 		2EFE16331B66DF5D00C8606C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFE16321B66DF5D00C8606C /* AppDelegate.swift */; };
 		2EFE16361B66DF5D00C8606C /* CamyTalk.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2EFE16341B66DF5D00C8606C /* CamyTalk.xcdatamodeld */; };
@@ -56,6 +57,7 @@
 		2E92F6D71B7C6013009A3FBB /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		2E92F6D91B7C6013009A3FBB /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		2E92F6DB1B7C619D009A3FBB /* Peer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Peer.swift; sourceTree = "<group>"; };
+		2EA7337F1B9FE6FD00C57FED /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2EE558861B955BCB00A45BD3 /* BlockedPeerListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockedPeerListTableViewController.swift; sourceTree = "<group>"; };
 		2EFE162D1B66DF5D00C8606C /* CamyTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CamyTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EFE16311B66DF5D00C8606C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 				2EFE163C1B66DF5D00C8606C /* Images.xcassets */,
 				2EFE163E1B66DF5D00C8606C /* LaunchScreen.xib */,
 				2EFE16341B66DF5D00C8606C /* CamyTalk.xcdatamodeld */,
+				2EA7337F1B9FE6FD00C57FED /* GoogleService-Info.plist */,
 				2EFE16301B66DF5D00C8606C /* Supporting Files */,
 			);
 			path = CamyTalk;
@@ -269,6 +272,7 @@
 				TargetAttributes = {
 					2EFE162C1B66DF5D00C8606C = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = TJLGZ6UGDP;
 					};
 					2EFE16441B66DF5D00C8606C = {
 						CreatedOnToolsVersion = 6.4;
@@ -302,6 +306,7 @@
 			files = (
 				2E31A8ED1B69E30200174056 /* green-circle-16.png in Resources */,
 				2E284A731B79A90300414B02 /* conversation_32.png in Resources */,
+				2EA733801B9FE6FD00C57FED /* GoogleService-Info.plist in Resources */,
 				2E284A761B79A98B00414B02 /* peers_32.png in Resources */,
 				2EFE163B1B66DF5D00C8606C /* Main.storyboard in Resources */,
 				2E31A8EE1B69E30200174056 /* red-circle-16.png in Resources */,
@@ -501,9 +506,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = CamyTalk/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "CamyTalk/CamyTalk-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -515,9 +523,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = CamyTalk/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "CamyTalk/CamyTalk-Bridging-Header.h";
 			};
 			name = Release;
